@@ -1,13 +1,30 @@
 services:
   db:
-    image: mysql:latest
+    image: mysql:8.0
+    container_name: proj_db
     environment:
       MYSQL_ROOT_PASSWORD: senha123
-    ports: ["3306:3306"]
+      MYSQL_DATABASE: projcardapio
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-psenha123"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
 
   api:
     image: projcardapio:latest
     build:
       context: .
       dockerfile: Dockerfile
-    ports: ["8080:8080"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MYSQL_DSN: app:app@tcp(db:3306)/projcardapio?parseTime=true&charset=utf8mb4&loc=Local
+      HTTP_ADDR: :8080
+    ports:
+      - "8080:8080"

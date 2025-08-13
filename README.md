@@ -1,2 +1,19 @@
-# ProjetoFinalNeoCamp
-Você foi contratado para implementar o cardápio digital de uma franquia de restaurantes. Atualmente, já existe um cardápio digital sendo utilizado, mas, por decisões executivas, foi decidido reconstruir completamente utilizando Go e MySQL.
+# ProjetoFinalNeoCamp (Go + net/http + MySQL + Docker/Colima)
+
+## Como rodar
+```bash
+cp .env.example .env
+docker compose up --build -d
+# ver logs
+docker compose logs -f db
+docker compose logs -f api
+```
+
+API básica:
+- `GET /healthz` (verifica conexão com o MySQL)
+- `GET /ping` → `{"pong": true}`
+
+## Próximos passos
+- Implementar handlers e repositórios de `ingredient`, `dish`, `menu`.
+- Montar rotas no `internal/http/router.go`.
+- Criar testes com `go test ./...`.

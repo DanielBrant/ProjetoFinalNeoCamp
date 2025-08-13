@@ -1,0 +1,51 @@
+-- 001_schema.sql
+CREATE TABLE IF NOT EXISTS ingredients (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(120) NOT NULL UNIQUE,
+  quantity INT NOT NULL CHECK (quantity >= 0),
+  description TEXT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL
+);
+
+CREATE TABLE IF NOT EXISTS dishes (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(120) NOT NULL UNIQUE,
+  description TEXT NULL,
+  photo_url TEXT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL
+);
+
+CREATE TABLE IF NOT EXISTS dish_ingredients (
+  dish_id BIGINT NOT NULL,
+  ingredient_id BIGINT NOT NULL,
+  quantity INT NOT NULL CHECK (quantity > 0),
+  PRIMARY KEY (dish_id, ingredient_id),
+  CONSTRAINT fk_di_dish FOREIGN KEY (dish_id) REFERENCES dishes(id),
+  CONSTRAINT fk_di_ing FOREIGN KEY (ingredient_id) REFERENCES ingredients(id)
+);
+
+CREATE TABLE IF NOT EXISTS menus (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(120) NOT NULL,
+  franchise_id VARCHAR(64) NOT NULL,
+  description TEXT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL,
+  UNIQUE KEY uk_menu (name, franchise_id)
+);
+
+CREATE TABLE IF NOT EXISTS menu_items (
+  menu_id BIGINT NOT NULL,
+  dish_id BIGINT NOT NULL,
+  price DECIMAL(10,2) NOT NULL CHECK (price > 0),
+  starts_at DATETIME NULL,
+  expires_at DATETIME NULL,
+  PRIMARY KEY (menu_id, dish_id),
+  CONSTRAINT fk_mi_menu FOREIGN KEY (menu_id) REFERENCES menus(id),
+  CONSTRAINT fk_mi_dish FOREIGN KEY (dish_id) REFERENCES dishes(id)
+);
