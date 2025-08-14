@@ -1,5 +1,4 @@
-# ProjetoFinalNeoCamp (Go + net/http + MySQL + Docker/Colima)
-
+# ProjetoFinalNeoCamp 
 ## Como rodar
 ```bash
 cp .env.example .env
