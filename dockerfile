@@ -1,13 +1,16 @@
 FROM golang:1.22-alpine AS build
 WORKDIR /app
 
-COPY go.mod go.sum ./
+# Copia apenas o go.mod; go.sum pode não existir inicialmente
+COPY go.mod ./
 RUN go mod download
 
 COPY . .
 
+RUN go mod tidy
+
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
-RUN go build -o http .
+RUN go build -o http ./cmd/api
 
 FROM alpine:3.20
 WORKDIR /app

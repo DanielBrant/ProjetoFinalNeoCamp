@@ -4,7 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-	// _ "github.com/go-sql-driver/mysql"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // OpenFromEnv opens *sql.DB using MYSQL_DSN env variable.
